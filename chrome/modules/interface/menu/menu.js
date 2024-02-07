@@ -1,46 +1,42 @@
 import { menu } from './element.js';
-import { createToggle, svgToggle } from '../toggle/toggle.js';
 import { dragElement } from '../../utils/drag.js';
 
-export function createMenu(flusher) {
+export function createMenu(flusher, nativeMenu, menuItem) {
    const toggledClass = 'toggled-on';
 
    flusher.video = flusher.props.external ? flusher.video.closest('.video-js') : flusher.video;
    const domMenu = flusher.video.querySelector('.flusher-menu');
+
    if (domMenu === null) {
-      let parent = flusher.props.external ? flusher.video : flusher.video;
+      let parent = flusher.props.external ? flusher.video : nativeMenu.parentElement;
 
       const shadowBox = document.createElement('div');
       shadowBox.id = 'shadowbox';
       const shadowRoot = shadowBox.attachShadow({ mode: 'open' });
       const b = typeof browser !== 'undefined' ? browser : chrome;
 
-      const linkElement = document.createElement('link');
+      /* const linkElement = document.createElement('link');
       linkElement.rel = 'stylesheet';
       linkElement.href = b.runtime.getURL('lib/rumble/app.b67a4f06.css');
-      shadowRoot.appendChild(linkElement);
+      shadowRoot.appendChild(linkElement); */
 
       const menuLink = document.createElement('link');
       menuLink.rel = 'stylesheet';
       menuLink.href = b.runtime.getURL('lib/flusher/menu.css');
       shadowRoot.appendChild(menuLink);
 
-      flusher.menu = menu.cloneNode(true);
-      flusher.menu.setAttribute('domain', flusher.props.domain);
+      const clonedMenu = menu.cloneNode(true);
 
-      shadowRoot.appendChild(flusher.menu);
+      shadowRoot.append(...clonedMenu.children);
+      flusher.menu = shadowRoot;
+
       parent.append(shadowBox);
-      parent = parent.querySelector('#shadowbox').shadowRoot;
+      parent = flusher.menu;
 
       let settingsMenu = parent.querySelector('.flusher-menu-settings');
       let layoutMenu = parent.querySelector('.flusher-menu-layout');
       let messageMenu = parent.querySelector('.flusher-menu-message');
       let overlayMenu = parent.querySelector('.flusher-menu-overlay');
-
-      const closeBtn = parent.querySelector('.flusher-menu-close');
-      closeBtn.addEventListener('mousedown', function (event) {
-         hideMenu(flusher);
-      });
 
       const homeBtn = parent.querySelector('.flusher-home');
       homeBtn.addEventListener('mousedown', function (event) {
@@ -58,19 +54,19 @@ export function createMenu(flusher) {
       });
 
       const positionBtn = overlayMenu.querySelector('.flusher-position');
-      const divInsidePosition = positionBtn.querySelector('div:empty');
+      const divInsidePosition = positionBtn.querySelector('span:empty');
       divInsidePosition.textContent = toTitleCase(flusher.states.positionStates[flusher.states.positionState]);
 
       positionBtn.addEventListener('mousedown', function (event) {
          flusher.states.positionState = (flusher.states.positionState + 1) % flusher.states.positionStates.length;
-         setExtensionStorageItem('flusher-position', lusher.states.positionState);
+         setExtensionStorageItem('flusher-position', flusher.states.positionState);
          divInsidePosition.textContent = toTitleCase(flusher.states.positionStates[flusher.states.positionState]);
          flusher.container.setAttribute('position', flusher.states.positionStates[flusher.states.positionState].replace(/\s/g, ""));
          flusher.resetPosition();
       });
 
       const sizeBtn = overlayMenu.querySelector('.flusher-size');
-      const divInsideSize = sizeBtn.querySelector('div:empty');
+      const divInsideSize = sizeBtn.querySelector('span:empty');
       divInsideSize.textContent = toTitleCase(flusher.states.sizeStates[flusher.states.sizeState]);
 
       sizeBtn.addEventListener('mousedown', function (event) {
@@ -82,7 +78,7 @@ export function createMenu(flusher) {
       });
 
       const backgroundBtn = messageMenu.querySelector('.flusher-background');
-      const divInsideBackground = backgroundBtn.querySelector('div:empty');
+      const divInsideBackground = backgroundBtn.querySelector('span:empty');
       divInsideBackground.textContent = toTitleCase(flusher.states.backgroundStates[flusher.states.backgroundState]);
 
       backgroundBtn.addEventListener('mousedown', function (event) {
@@ -100,37 +96,10 @@ export function createMenu(flusher) {
          baseMenu.style.display = 'none';
       });
 
-      const settingsBackBtn = parent.querySelector('.flusher-settings-back');
-      settingsBackBtn.addEventListener('mousedown', function (event) {
-         settingsMenu.style.display = 'none';
-         baseMenu.style.display = 'block';
-      });
-
-      const settingsCloseBtn = parent.querySelector('.flusher-settings-close');
-      settingsCloseBtn.addEventListener('mousedown', function (event) {
-         hideMenu(flusher);
-      });
-
-      const layoutCloseBtn = parent.querySelector('.flusher-layout-close');
-      layoutCloseBtn.addEventListener('mousedown', function (event) {
-         hideMenu(flusher);
-      });
-
       const layoutMenuBtn = parent.querySelector('.flusher-layoutMenu');
       layoutMenuBtn.addEventListener('mousedown', function (event) {
          layoutMenu.style.display = 'block';
          baseMenu.style.display = 'none';
-      });
-
-      const layoutBackBtn = parent.querySelector('.flusher-layout-back');
-      layoutBackBtn.addEventListener('mousedown', function (event) {
-         layoutMenu.style.display = 'none';
-         baseMenu.style.display = 'block';
-      });
-
-      const messageCloseBtn = parent.querySelector('.flusher-message-close');
-      messageCloseBtn.addEventListener('mousedown', function (event) {
-         hideMenu(flusher);
       });
 
       const messageMenuBtn = parent.querySelector('.flusher-messageMenu');
@@ -139,27 +108,10 @@ export function createMenu(flusher) {
          layoutMenu.style.display = 'none';
       });
 
-      const messageBackBtn = parent.querySelector('.flusher-message-back');
-      messageBackBtn.addEventListener('mousedown', function (event) {
-         messageMenu.style.display = 'none';
-         layoutMenu.style.display = 'block';
-      });
-
-      const overlayCloseBtn = parent.querySelector('.flusher-overlay-close');
-      overlayCloseBtn.addEventListener('mousedown', function (event) {
-         hideMenu(flusher);
-      });
-
       const overlayMenuBtn = parent.querySelector('.flusher-overlayMenu');
       overlayMenuBtn.addEventListener('mousedown', function (event) {
          overlayMenu.style.display = 'block';
          layoutMenu.style.display = 'none';
-      });
-
-      const overlayBackBtn = parent.querySelector('.flusher-overlay-back');
-      overlayBackBtn.addEventListener('mousedown', function (event) {
-         overlayMenu.style.display = 'none';
-         layoutMenu.style.display = 'block';
       });
 
       (flusher.states.flushState || !flusher.states.chatEnabled) ? layoutMenuBtn.style.display = 'none' : layoutMenuBtn.style.display = 'flex';
@@ -179,7 +131,7 @@ export function createMenu(flusher) {
       if (flusher.states.spamState) spamBtn.classList.toggle(toggledClass);
 
       const fontBtn = settingsMenu.querySelector('.flusher-font');
-      const divInsideFont = fontBtn.querySelector('div:empty');
+      const divInsideFont = fontBtn.querySelector('span:empty');
       divInsideFont.textContent = toTitleCase(flusher.states.sizeStates[flusher.states.fontState]);
 
       fontBtn.addEventListener('mousedown', function (event) {
@@ -279,8 +231,6 @@ export function createMenu(flusher) {
 
          flusher.clear();
 
-         svgToggle(flusher);
-         toggleEnableMenu();
          togglePointerEvents(flusher);
 
          (flusher.states.flushState || !flusher.states.chatEnabled) ? spamBtnContainer.style.display = 'none' : spamBtnContainer.style.display = 'flex';
@@ -297,18 +247,60 @@ export function createMenu(flusher) {
 
       togglePointerEvents(flusher);
 
-      return createToggle(flusher);
-   }
+      menuItem.addEventListener('click', function (event) {
+         const children = nativeMenu.querySelectorAll('li');
 
-   /* flusher.states.chatEnabled = await getExtensionStorageItem('flusher-enable', flusher.states.chatEnabled);
-   flusher.states.flushState = await getExtensionStorageItem('flusher-flush', flusher.states.flushState);
-   flusher.states.reply = await getExtensionStorageItem('flusher-reply', flusher.states.reply);
-   flusher.states.spamState = await getExtensionStorageItem('flusher-spam', flusher.states.spamState);
-   flusher.states.positionState = await getExtensionStorageItem('flusher-position', flusher.states.positionState);
-   flusher.states.fontState = await getExtensionStorageItem('flusher-font', flusher.states.fontState);
-   flusher.states.sizeState = await getExtensionStorageItem('flusher-size', flusher.states.sizeState);
-   flusher.states.backgroundState = await getExtensionStorageItem('flusher-background', flusher.states.backgroundState);
-   flusher.states.timeState = await getExtensionStorageItem('flusher-time', flusher.states.timeState); */
+         const hasInvisibleChild = Array.from(children).some(child => {
+            if (child.hasAttribute('flusher')) return false;
+            return window.getComputedStyle(child).getPropertyValue('display') === 'none';
+         });
+
+         hasInvisibleChild ? hideMenu(flusher) : showMenu();
+      });
+
+      menuItem.setAttribute('flusher', '');
+      flusher.menuItem = menuItem;
+      nativeMenu.appendChild(flusher.menuItem);
+
+
+      const handleStyleChanges = () => {
+         const children = nativeMenu.parentElement.querySelectorAll('ul');
+
+         const hasVisibleChild = Array.from(children).slice(1).some(child => {
+            return window.getComputedStyle(child).getPropertyValue('display') === 'block';
+         });
+
+         menuItem.style.display = hasVisibleChild ? 'none' : 'block';
+      };
+
+      /* put global for dispose */
+      const observer = new MutationObserver(handleStyleChanges);
+      const observerConfig = { attributes: true, subtree: true };
+      observer.observe(nativeMenu.parentElement, observerConfig);
+
+      function showMenu() {
+         flusher.nativeMenu = nativeMenu;
+         const liElements = nativeMenu.querySelectorAll('li');
+         liElements.forEach(li => {
+            if (li.hasAttribute('flusher')) {
+               li.setAttribute('style', 'width: auto; height: auto; margin: 0px; padding: 0px; opacity: 0.8; font: 12px sans-serif; box-sizing: content-box; border-top: none; border-right: none; border-bottom: 1px solid rgb(255, 255, 255); border-left: none; border-image: initial; visibility: visible; text-size-adjust: auto; text-decoration: none; color: rgb(255, 255, 255); position: relative; list-style: none; text-align: left; white-space: nowrap; min-width: 102px; max-width: 140px; transition: opacity 100ms ease 0s; display: block;');
+               const spans = li.querySelectorAll('span');
+               spans[0].style.display = 'inline-block';
+               spans[1].style.display = 'none';
+
+               const div = li.querySelector('div');
+               div.setAttribute('style', 'width: auto; height: auto; margin: 0px; padding: 6px 5px 6px 18px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: inherit; cursor: pointer; transition: opacity 100ms ease 0s;');
+
+               return;
+            }
+            li.style.display = 'none';
+         });
+
+         baseMenu.style.display = 'block';
+         /* flusher.clickOutsideHandlerFunction = (event) => clickOutsideHandler(event, flusher);
+         document.addEventListener('mousedown', flusher.clickOutsideHandlerFunction); */
+      }
+   }
 
    function toTitleCase(str) {
       if (!str) return 'undefined';
@@ -326,17 +318,6 @@ export function createMenu(flusher) {
    }
 }
 
-export function toggleEnableMenu() {
-   var elementsToToggle = ['flusher-flush', 'flusher-settings', 'flusher-layoutMenu'];
-   elementsToToggle.forEach(function (id) {
-      var element = document.getElementById(id);
-      if (element) {
-         if (id === 'flusher-layoutMenu' && flusher.states.flushState === true && flusher.states.chatEnabled) return;
-         flusher.states.chatEnabled ? flusher.video.style.display = 'flex' : flusher.video.style.display = 'none';
-      }
-   });
-}
-
 export function hideMenu(flusher) {
    const baseMenu = flusher.menu.querySelector('.flusher-menu-base');
    const settingsMenu = flusher.menu.querySelector('.flusher-menu-settings');
@@ -344,15 +325,31 @@ export function hideMenu(flusher) {
    const overlayMenu = flusher.menu.querySelector('.flusher-menu-overlay');
    const messageMenu = flusher.menu.querySelector('.flusher-menu-message');
 
-   flusher.menu.style.display = 'none';
+   flusher.menuItem.style.display = 'none';
    settingsMenu.style.display = 'none';
    baseMenu.style.display = 'none';
    layoutMenu.style.display = 'none';
    overlayMenu.style.display = 'none';
    messageMenu.style.display = 'none';
 
-   svgToggle(flusher);
-   document.removeEventListener('mousedown', flusher.clickOutsideHandlerFunction);
+   const liElements = flusher.nativeMenu.querySelectorAll('li');
+
+   liElements.forEach(li => {
+      if (li.hasAttribute('flusher')) {
+         li.setAttribute('style', 'width: auto; height: auto; margin: 0px; padding: 0px; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: rgb(255, 255, 255); position: relative; list-style: none; text-align: left; white-space: nowrap; min-width: 102px; max-width: 140px; transition: opacity 100ms ease 0s;');
+         const spans = li.querySelectorAll('span');
+         spans[0].style.display = 'none';
+         spans[1].style.display = 'inline-block';
+
+         const div = li.querySelector('div');
+         div.setAttribute('style', 'width: auto; height: auto; margin: 0px; padding: 6px 14px 6px 7px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: inherit; cursor: pointer;');
+
+         return;
+      }
+      li.style.display = 'list-item';
+   });
+
+   /* document.removeEventListener('mousedown', flusher.clickOutsideHandlerFunction); */
 }
 
 export function clickOutsideHandler(event, flusher) {

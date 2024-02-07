@@ -1,4 +1,4 @@
-import { toggleEnableMenu } from "../interface/menu/menu.js";
+import { createMenu, toggleEnableMenu } from "../interface/menu/menu.js";
 import { processMessageQueue } from "../queue/queue.js"
 import RUMBLE from '../site/rumble.js';
 
@@ -24,16 +24,16 @@ export function checkResize(flusher) {
 					window.currentUrl = window.location.href;
 
 					if ((width === null || width === 0) && (!height || height === 0)) {
-							if (flusher !== null) {
-								console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Remove Chat');
-								const init = !flusher.props.external;
-								flusher.resizeObserver.disconnect();
-								flusher.resizeObserver = null;
-								flusher.provider.unbindRequests();
-								flusher = null;
-								if (init) rumble.init();
-							}
-						
+						if (flusher !== null) {
+							console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Remove Chat');
+							const init = !flusher.props.external;
+							flusher.resizeObserver.disconnect();
+							flusher.resizeObserver = null;
+							flusher.provider.unbindRequests();
+							flusher = null;
+							if (init) rumble.init();
+						}
+
 						return;
 					}
 
@@ -44,7 +44,7 @@ export function checkResize(flusher) {
 					flusher.props.parentHeight = Math.trunc(height);
 
 					flusher.container.style.setProperty('--flusher-width', `-${flusher.props.parentWidth}px`);
-					flusher.toggle.setAttribute('domain', flusher.props.domain);
+					/* flusher.toggle.setAttribute('domain', flusher.props.domain); */
 
 					const newFlushState = flusher.states.flushState !== undefined ? (flusher.states.flushState ? 'horizontal' : 'vertical') : (flusher.states.flushState ? 'horizontal' : 'vertical');
 
@@ -55,7 +55,7 @@ export function checkResize(flusher) {
 					flusher.container.setAttribute('background', flusher.states.backgroundStates[flusher.states.backgroundState]);
 					flusher.container.setAttribute('font', flusher.states.sizeStates[flusher.states.fontState].replace(/\s/g, ""));
 
-					toggleEnableMenu();
+					/* toggleEnableMenu(); */
 
 					const documentWidth = document.documentElement.clientWidth;
 					if (documentWidth < ((flusher.props.parentWidth / 2) + 10)) {
@@ -81,6 +81,36 @@ export function checkResize(flusher) {
 
 						flusher.props.loading = false;
 						processMessageQueue(flusher);
+
+						document.addEventListener('click', handleClick);
+
+						function handleClick(event) {
+							var targetSvg = event.target.closest('svg')?.tagName === 'svg' && event.target.querySelector('path')?.getAttribute('d').includes('M20');
+
+							if (targetSvg) {
+								document.removeEventListener('click', handleClick);
+								var parentDiv = document.querySelector('div[title="Playback settings"]');
+
+								setTimeout(function () {
+									var closestUl = parentDiv?.querySelector('ul');
+
+									if (closestUl) {
+										var firstLi = closestUl.querySelector('li');
+										if (firstLi) {
+											var clonedLi = firstLi.cloneNode(true);
+											clonedLi.firstChild.childNodes.forEach(function (node) {
+												if (node.textContent.trim() === 'Speed') node.textContent = 'Chat Flusher';
+											});
+
+											var secondLastSpan = clonedLi.firstChild.childNodes[clonedLi.firstChild.childNodes.length - 2];
+											if (secondLastSpan && secondLastSpan.tagName === 'SPAN') secondLastSpan.remove();
+
+											createMenu(flusher, closestUl, clonedLi);
+										}
+									}
+								}, 250);
+							}
+						}
 
 						console.info(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m (${flusher.props.channelName} ${flusher.props.domain} ${flusher.props.isVod ? 'VOD' : 'LIVE'}): Report bugs or collaborate at https://github.com/r0808914/rumble-Chat-Flusher`);
 					} else {

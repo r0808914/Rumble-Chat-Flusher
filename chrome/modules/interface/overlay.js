@@ -49,7 +49,7 @@ export async function createChat(flusher) {
    flusher.states.backgroundState = await getExtensionStorageItem('flusher-background', flusher.states.backgroundState);
    flusher.states.timeState = await getExtensionStorageItem('flusher-time', flusher.states.timeState);
 
-   flusher.toggle = createMenu(flusher);
+   /* flusher.toggle = createMenu(flusher); */
 
    flusher.props.external ? flusher.video.parentNode.append(chatFlusher) : flusher.video.append(chatFlusher);
    flusher.props.external ? shadowRoot.appendChild(flusherDiv) : chatFlusher.append(flusherDiv);
