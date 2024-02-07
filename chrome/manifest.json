@@ -23,8 +23,7 @@
         "modules/**"
       ],
       "matches": [
-        "*://*.rumble.com/*",
-        "*://*.ip2.network/*"
+        "*://*.rumble.com/*"
       ]
     }
   ],

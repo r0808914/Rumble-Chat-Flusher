@@ -112,7 +112,7 @@ export function checkResize(flusher) {
 							}
 						}
 
-						console.info(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m (${flusher.props.channelName} ${flusher.props.domain} ${flusher.props.isVod ? 'VOD' : 'LIVE'}): Report bugs or collaborate at https://github.com/r0808914/rumble-Chat-Flusher`);
+						console.info(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m (${flusher.props.channelName} ${flusher.props.domain} ${flusher.props.isVod ? 'VOD' : 'LIVE'}): Report bugs or collaborate at https://github.com/r0808914/Rumble-Chat-Flusher`);
 					} else {
 						flusher.states.flushState ? flusher.clear() : flusher.resetPosition();
 					}
@@ -154,22 +154,16 @@ export function debouncedScroll(flusher) {
 	if (flusher.props?.scrolling === true) return;
 	flusher.props.scrolling = true;
 
-	const chatBtn = document.querySelector('#chatroom .justify-center.absolute');
-	const chatContainer = document.querySelector('#chatroom [data-chat-entry]');
+	const chatContainer = document.getElementById('chat-history-list');
 	if (flusher.props.isFullscreen && !flusher.props.isVod) {
-		if (chatBtn !== null) {
-			chatBtn.click();
-		} if (chatContainer !== null) {
-			const chatContainerParent = chatContainer.closest('.overflow-y-scroll');
-			if (chatContainerParent !== null) {
-				chatContainerParent.scrollTop = chatContainerParent.scrollHeight;
-			}
+		if (chatContainer !== null) {
+			chatContainer.scrollTop = chatContainer.scrollHeight;
 		}
 	}
 
 	const timeoutId = setTimeout(() => {
 		flusher.props.scrolling = false;
-	}, 5000);
+	}, 10000);
 
 	flusher.props.timeoutIds.push(timeoutId);
 }

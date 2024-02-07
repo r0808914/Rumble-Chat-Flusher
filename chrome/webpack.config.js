@@ -6,7 +6,7 @@ module.exports = {
    optimization: {
       minimize: false
    },
-   devtool: 'source-map', // or 'cheap-module-source-map', etc.
+   devtool: 'source-map',
    output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'rumble-chat-flusher.js'

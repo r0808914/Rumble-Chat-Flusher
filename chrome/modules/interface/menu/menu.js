@@ -1,9 +1,29 @@
 import { menu } from './element.js';
 import { dragElement } from '../../utils/drag.js';
 
-export function createMenu(flusher, nativeMenu, menuItem) {
-   const toggledClass = 'toggled-on';
+const originalPath = `
+<svg class="flusher-toggle" style="width: auto; height: 100%; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="17px" viewBox="0 0 28 18">
+<g>
+  <path opacity="0.4" fill-rule="evenodd" d="m11.52999,4.0252a8.96,8.96 0 0 0 -1.516,5a8.96,8.96 0 0 0 1.515,5l-6.515,0a5,5 0 1 1 0,-10l6.515,0l0.001,0z" id="svg_2"></path>
+  <rect x="10.01399" y="0.0252" width="18" height="18" rx="9" id="svg_3"></rect>
+</g>
+<path d="m17.92725,13.1244c-0.607,0.281 -1.291,-0.124 -1.367,-0.806c-0.108,-0.972 -0.163,-1.961 -0.163,-2.964s0.055,-1.992 0.163,-2.963c0.076,-0.682 0.76,-1.087 1.367,-0.806a22.47,22.47 0 0 1 2.423,1.31c0.82,0.51 1.6,1.067 2.338,1.665c0.502,0.407 0.502,1.182 0,1.588a23.04,23.04 0 0 1 -2.338,1.665a22.51,22.51 0 0 1 -2.422,1.31l-0.001,0.001z" fill="#061726" id="svg_4"></path>
+</svg>
+`;
 
+const newPath = `
+<svg class="flusher-toggle" style="width: auto; height: 100%; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="17px" viewBox="0 0 28 18">
+<g>
+  <path opacity="0.4" d="m16.46183,14.03325l6.516,0a5,5 0 1 0 0,-10l-6.515,0a8.96,8.96 0 0 1 1.515,5a8.96,8.96 0 0 1 -1.515,5l-0.001,0z" id="svg_1"></path>
+  <path opacity="0.7" fill-rule="evenodd" d="m8.97783,0.03325a9,9 0 1 0 0,18a9,9 0 1 0 0,-18zm-3.61,5.412c-0.14,0.21 -0.14,0.503 -0.14,1.088l0,5c0,0.585 0,0.878 0.14,1.088c0.061,0.091 0.139,0.169 0.23,0.23c0.21,0.14 0.503,0.14 1.088,0.14s0.878,0 1.088,-0.14c0.091,-0.061 0.169,-0.139 0.23,-0.23c0.141,-0.21 0.141,-0.503 0.141,-1.088l0,-5c0,-0.585 0,-0.878 -0.141,-1.088c-0.061,-0.091 -0.139,-0.169 -0.23,-0.23c-0.21,-0.14 -0.503,-0.14 -1.088,-0.14s-0.878,0 -1.088,0.14c-0.091,0.061 -0.169,0.139 -0.23,0.23zm4.583,0c-0.141,0.21 -0.141,0.503 -0.141,1.088l0,5c0,0.585 0,0.878 0.141,1.088c0.061,0.091 0.139,0.169 0.23,0.23c0.21,0.14 0.503,0.14 1.088,0.14s0.878,0 1.088,-0.14c0.091,-0.061 0.169,-0.139 0.23,-0.23c0.14,-0.21 0.14,-0.503 0.14,-1.088l0,-5c0,-0.585 0,-0.878 -0.14,-1.088c-0.061,-0.091 -0.139,-0.169 -0.23,-0.23c-0.21,-0.14 -0.503,-0.14 -1.088,-0.14s-0.878,0 -1.088,0.14c-0.091,0.061 -0.169,0.139 -0.23,0.23z" id="svg_2"></path>
+</g>
+</svg>
+`;
+
+const originalPathFragment = new DOMParser().parseFromString(originalPath, 'text/html').body.firstChild;
+const newPathFragment = new DOMParser().parseFromString(newPath, 'text/html').body.firstChild;
+
+export function createMenu(flusher, nativeMenu, menuItem) {
    flusher.video = flusher.props.external ? flusher.video.closest('.video-js') : flusher.video;
    const domMenu = flusher.video.querySelector('.flusher-menu');
 
@@ -41,7 +61,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
       const homeBtn = parent.querySelector('.flusher-home');
       homeBtn.addEventListener('mousedown', function (event) {
          hideMenu(flusher);
-         window.open('https://github.com/r0808914/rumble-Chat-Flusher/issues', '_blank');
+         window.open('https://github.com/r0808914/Rumble-Chat-Flusher/issues', '_blank');
       });
 
       const storeBtn = parent.querySelector('.flusher-store');
@@ -50,7 +70,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          const userAgent = navigator.userAgent.toLowerCase();
          userAgent.includes("firefox") ?
             window.open('https://addons.mozilla.org/en-US/firefox/addon/rumblechatflusher/', '_blank') :
-            window.open('https://chromewebstore.google.com/detail/rumble-chat-flusher/cefplanllnmdnnhncpopljmcjnlafdke', '_blank');
+            window.open('https://chromewebstore.google.com/detail/Rumble-Chat-Flusher/cefplanllnmdnnhncpopljmcjnlafdke', '_blank');
       });
 
       const positionBtn = overlayMenu.querySelector('.flusher-position');
@@ -119,16 +139,14 @@ export function createMenu(flusher, nativeMenu, menuItem) {
       const spamBtnContainer = parent.querySelector('.flusher-spam');
       const spamBtn = spamBtnContainer.querySelector('.flusher-toggle');
       spamBtn.addEventListener('mousedown', function (event) {
-         const toggleElement = event.currentTarget;
-         toggleElement.classList.toggle(toggledClass);
-         const newSpamEnabled = toggleElement.classList.contains(toggledClass);
-         flusher.states.spamState = newSpamEnabled;
-         setExtensionStorageItem('flusher-spam', newSpamEnabled);
+         flusher.states.spamState = !flusher.states.spamState;
+         toggleButton(spamBtn, flusher.states.spamState);
+         setExtensionStorageItem('flusher-spam', flusher.states.spamState);
          flusher.props.displayedMessages = [];
       });
 
       (flusher.states.flushState || !flusher.states.chatEnabled) ? spamBtnContainer.style.display = 'none' : spamBtnContainer.style.display = 'flex';
-      if (flusher.states.spamState) spamBtn.classList.toggle(toggledClass);
+      toggleButton(spamBtn, flusher.states.spamState);
 
       const fontBtn = settingsMenu.querySelector('.flusher-font');
       const divInsideFont = fontBtn.querySelector('span:empty');
@@ -147,11 +165,9 @@ export function createMenu(flusher, nativeMenu, menuItem) {
       const replyToggleContainer = parent.querySelector('.flusher-reply');
       const replyToggle = replyToggleContainer.querySelector('.flusher-toggle');
       replyToggle.addEventListener('mousedown', function (event) {
-         const toggleElement = event.currentTarget;
-         toggleElement.classList.toggle(toggledClass);
+         flusher.states.reply = !flusher.states.reply;
 
-         const newReplyEnabled = toggleElement.classList.contains(toggledClass);
-         flusher.states.reply = newReplyEnabled;
+         toggleButton(replyToggle, flusher.states.reply);
 
          flusher.container.childNodes.forEach(childNode => {
             const chatEntry = childNode.querySelector('.chat-entry');
@@ -160,42 +176,37 @@ export function createMenu(flusher, nativeMenu, menuItem) {
             }
          });
 
-         setExtensionStorageItem('flusher-reply', newReplyEnabled);
+         setExtensionStorageItem('flusher-reply', flusher.states.reply);
       });
 
       (flusher.props.external || flusher.props.isVod) ? replyToggleContainer.style.display = 'none' : replyToggleContainer.style.display = 'flex';
-      if (flusher.states.reply) replyToggle.classList.toggle(toggledClass);
+      toggleButton(replyToggle, flusher.states.reply);
 
       const timeToggleContainer = messageMenu.querySelector('.flusher-time');
       const timeToggle = timeToggleContainer.querySelector('.flusher-toggle');
       timeToggle.addEventListener('mousedown', function (event) {
-         const toggleElement = event.currentTarget;
-         toggleElement.classList.toggle(toggledClass);
-
-         const newTimeEnabled = toggleElement.classList.contains(toggledClass);
-         flusher.states.timeState = newTimeEnabled;
-
+         flusher.states.timeState = !flusher.states.timeState;
+         toggleButton(timeToggle, flusher.states.timeState);
          flusher.container.childNodes.forEach(childNode => {
             const chatEntry = childNode.querySelector('.chat-entry div');
             chatEntry.firstElementChild.style.display = flusher.states.timeState ? 'initial' : 'none';
          });
 
-         flusher.container.setAttribute('enabled', newTimeEnabled);
-         setExtensionStorageItem('flusher-time', newTimeEnabled);
+         flusher.container.setAttribute('enabled', flusher.states.timeState);
+         setExtensionStorageItem('flusher-time', flusher.states.timeState);
       });
 
-      if (flusher.states.timeState) timeToggle.classList.toggle(toggledClass);
+      toggleButton(timeToggle, flusher.states.timeState);
       (!flusher.props.isVod || flusher.states.flushState) ? timeToggleContainer.style.display = 'none' : timeToggleContainer.style.display = 'flex';
 
       const flusherToggleContainer = parent.querySelector('.flusher-flush');
       const flushToggle = flusherToggleContainer.querySelector('.flusher-toggle');
       flushToggle.addEventListener('mousedown', function (event) {
-         const toggleElement = event.currentTarget;
-         toggleElement.classList.toggle(toggledClass);
+         flusher.states.flushState = !flusher.states.flushState;
 
-         const newFlushState = toggleElement.classList.contains(toggledClass);
-         newFlushState ? layoutMenuBtn.style.display = 'none' : layoutMenuBtn.style.display = 'flex';
-         flusher.states.flushState = newFlushState;
+         flusher.states.flushState ? layoutMenuBtn.style.display = 'none' : layoutMenuBtn.style.display = 'flex';
+
+         toggleButton(flushToggle, flusher.states.flushState);
 
          (flusher.states.flushState || !flusher.states.chatEnabled) ? spamBtnContainer.style.display = 'none' : spamBtnContainer.style.display = 'flex';
 
@@ -209,25 +220,23 @@ export function createMenu(flusher, nativeMenu, menuItem) {
 
          togglePointerEvents(flusher);
          flusher.clear();
-         flusher.container.setAttribute('layout', newFlushState ? 'horizontal' : 'vertical');
+         flusher.container.setAttribute('layout', flusher.states.flushState ? 'horizontal' : 'vertical');
 
-         setExtensionStorageItem('flusher-flush', newFlushState);
+         setExtensionStorageItem('flusher-flush', flusher.states.flushState);
       });
 
       (!flusher.states.chatEnabled) ? flusherToggleContainer.style.display = 'none' : flusherToggleContainer.style.display = 'flex';
-      if (flusher.states.flushState) flushToggle.classList.toggle(toggledClass);
+      toggleButton(flushToggle, flusher.states.flushState);
 
       const flusherToggle = parent.querySelector('.flusher-enable .flusher-toggle');
       flusherToggle.addEventListener('mousedown', function (event) {
-         const toggleElement = event.currentTarget;
-         toggleElement.classList.toggle(toggledClass);
+         flusher.states.chatEnabled = !flusher.states.chatEnabled;
 
-         const newChatEnabled = toggleElement.classList.contains(toggledClass);
-         flusher.states.chatEnabled = newChatEnabled;
+         toggleButton(flusherToggle, flusher.states.chatEnabled);
 
-         newChatEnabled ? flusher.provider.bindRequests(flusher) : flusher.provider.unbindRequests(flusher)
+         flusher.states.chatEnabled ? flusher.provider.bindRequests(flusher) : flusher.provider.unbindRequests(flusher)
 
-         if (newChatEnabled && flusher.container.attributes['layout'].nodeValue === 'vertical') dragElement(flusher);
+         if (flusher.states.chatEnabled && flusher.container.attributes['layout'].nodeValue === 'vertical') dragElement(flusher);
 
          flusher.clear();
 
@@ -238,12 +247,12 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          (!flusher.states.chatEnabled) ? flusherToggleContainer.style.display = 'none' : flusherToggleContainer.style.display = 'flex';
          (!flusher.states.chatEnabled) ? fontBtn.style.display = 'none' : fontBtn.style.display = 'flex';
 
-         flusher.container.setAttribute('enabled', newChatEnabled);
+         flusher.container.setAttribute('enabled', flusher.states.chatEnabled);
 
-         setExtensionStorageItem('flusher-enable', newChatEnabled);
+         setExtensionStorageItem('flusher-enable', flusher.states.chatEnabled);
       });
 
-      if (flusher.states.chatEnabled) flusherToggle.classList.toggle(toggledClass);
+      toggleButton(flusherToggle, flusher.states.chatEnabled);
 
       togglePointerEvents(flusher);
 
@@ -299,6 +308,18 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          baseMenu.style.display = 'block';
          /* flusher.clickOutsideHandlerFunction = (event) => clickOutsideHandler(event, flusher);
          document.addEventListener('mousedown', flusher.clickOutsideHandlerFunction); */
+      }
+   }
+
+   function toggleButton(button, toggle) {
+      const newPath = toggle ? originalPathFragment : newPathFragment;
+
+      while (button.firstChild) {
+         button.removeChild(button.firstChild);
+      }
+
+      for (const element of newPath.children) {
+         button.appendChild(element.cloneNode(true));
       }
    }
 

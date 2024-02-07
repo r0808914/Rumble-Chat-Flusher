@@ -4,7 +4,6 @@ class Rumble {
 
   static init() {
     console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Initialize');
-    const channelName = window.location.pathname.slice(1);
     let stopObserver = false;
     let video;
 
@@ -12,11 +11,12 @@ class Rumble {
 
     if (video) {
       console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble video found');
-      console.log(video.querySelectorAll('ul'));  
-
-      const flusher = new Flusher(video, "RUMBLE", channelName);
-      createChat(flusher);
-      return;
+      if(document.querySelector('.video-header-live-info')){
+        const channelName = document.querySelector('.media-heading-name').textContent.trim();
+        const flusher = new Flusher(video, "RUMBLE", channelName);
+        createChat(flusher);
+        return;
+      }
     }
 
     console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble start video observer');
@@ -25,9 +25,10 @@ class Rumble {
         if (!stopObserver && mutation.addedNodes) {
           mutation.addedNodes.forEach(function (node) {
             video = document.getElementById("videoPlayer");
-            /* if (video && video.querySelectorAll('ul')[0]) { */
-            if (video) {
+            const live = document.querySelector('.video-header-live-info');
+            if (video && live) {
               console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble stop video observer');
+              const channelName = document.querySelector('.media-heading-name').textContent.trim();
               console.log(video.querySelectorAll('ul'));  
               observer.disconnect();
               stopObserver = true;

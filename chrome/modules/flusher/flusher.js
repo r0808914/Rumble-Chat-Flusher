@@ -3,19 +3,16 @@ import { FlusherProps } from './props.js';
 import { FlusherMessages } from './messages.js';
 import { visibilityChange } from "../utils/utils.js";
 
-import Badges from '../utils/badges.js';
-
 export class Flusher {
 	constructor(video, domain, channelName) {
 		this.video = video;
 		this.states = new FlusherStates();
 		this.props = new FlusherProps();
 		this.provider = new FlusherMessages();
-		this.badges = new Badges().badgeTypeToSVG;
 		this.props.domain = domain;
 		this.props.channelName = channelName;
 		this.props.external = domain === 'RUMBLE' ? false : true;
-		this.props.isVod = window.location.href.includes('/video/');
+		/* this.props.isVod = window.location.href.includes('/video/'); */
 		visibilityChange(this);
 	}
 
