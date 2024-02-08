@@ -166,6 +166,11 @@ export class FlusherMessages {
             }
          }
 
+         if (!flusher.states.avatar) {
+            const avatar = clonedNode.querySelector('.chat-history--user-avatar');
+            if (avatar) avatar.style.display = 'none';
+         }
+
          flusher.props.elementQueue.push(clonedNode);
          processElementQueue(flusher);
       }

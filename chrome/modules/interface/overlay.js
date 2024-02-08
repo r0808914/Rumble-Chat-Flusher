@@ -40,7 +40,7 @@ export async function createChat(flusher) {
 
    flusher.states.chatEnabled = await getExtensionStorageItem('flusher-enable', flusher.states.chatEnabled);
    flusher.states.flushState = await getExtensionStorageItem('flusher-flush', flusher.states.flushState);
-   flusher.states.reply = await getExtensionStorageItem('flusher-reply', flusher.states.reply);
+   flusher.states.avatar = await getExtensionStorageItem('flusher-avatar', flusher.states.avatar);
    flusher.states.spamState = await getExtensionStorageItem('flusher-spam', flusher.states.spamState);
    flusher.states.positionState = await getExtensionStorageItem('flusher-position', flusher.states.positionState);
    flusher.states.fontState = await getExtensionStorageItem('flusher-font', flusher.states.fontState);

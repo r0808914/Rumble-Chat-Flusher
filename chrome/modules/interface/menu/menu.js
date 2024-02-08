@@ -124,8 +124,9 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          layoutMenu.style.display = 'none';
       });
 
-      (flusher.states.flushState || !flusher.states.chatEnabled) ? layoutMenuBtn.style.display = 'none' : layoutMenuBtn.style.display = 'flex';
-
+      (flusher.states.flushState || !flusher.states.chatEnabled) ? overlayMenuBtn.style.display = 'none' : overlayMenuBtn.style.display = 'flex';
+      (flusher.states.flushState || !flusher.states.chatEnabled) ? backgroundBtn.style.display = 'none' : backgroundBtn.style.display = 'flex';
+      
       const spamBtnContainer = parent.querySelector('.flusher-spam');
       const spamBtn = spamBtnContainer.querySelector('.flusher-toggle');
       spamBtn.addEventListener('mousedown', function (event) {
@@ -152,25 +153,22 @@ export function createMenu(flusher, nativeMenu, menuItem) {
 
       (!flusher.states.chatEnabled) ? fontBtn.style.display = 'none' : fontBtn.style.display = 'flex';
 
-      const replyToggleContainer = parent.querySelector('.flusher-reply');
-      const replyToggle = replyToggleContainer.querySelector('.flusher-toggle');
-      replyToggle.addEventListener('mousedown', function (event) {
-         flusher.states.reply = !flusher.states.reply;
+      const avatarToggleContainer = parent.querySelector('.flusher-avatar');
+      const avatarToggle = avatarToggleContainer.querySelector('.flusher-toggle');
+      avatarToggle.addEventListener('mousedown', function (event) {
+         flusher.states.avatar = !flusher.states.avatar;
 
-         toggleButton(replyToggle, flusher.states.reply);
+         toggleButton(avatarToggle, flusher.states.avatar);
 
          flusher.container.childNodes.forEach(childNode => {
-            const chatEntry = childNode.querySelector('.chat-entry');
-            if (chatEntry && chatEntry.childElementCount > 1) {
-               chatEntry.firstElementChild.style.display = flusher.states.reply ? 'flex' : 'none';
-            }
+            const avatar = childNode.querySelector('.chat-history--user-avatar');
+            if (avatar) avatar.style.display = flusher.states.avatar ? 'flex' : 'none';
          });
 
-         setExtensionStorageItem('flusher-reply', flusher.states.reply);
+         setExtensionStorageItem('flusher-avatar', flusher.states.avatar);
       });
 
-      /* (flusher.props.external || flusher.props.isVod) ? replyToggleContainer.style.display = 'none' : replyToggleContainer.style.display = 'flex'; */
-      toggleButton(replyToggle, flusher.states.reply);
+      toggleButton(avatarToggle, flusher.states.avatar);
 
       const timeToggleContainer = messageMenu.querySelector('.flusher-time');
       const timeToggle = timeToggleContainer.querySelector('.flusher-toggle');
@@ -194,7 +192,8 @@ export function createMenu(flusher, nativeMenu, menuItem) {
       flushToggle.addEventListener('mousedown', function (event) {
          flusher.states.flushState = !flusher.states.flushState;
 
-         flusher.states.flushState ? layoutMenuBtn.style.display = 'none' : layoutMenuBtn.style.display = 'flex';
+         flusher.states.flushState ? overlayMenuBtn.style.display = 'none' : overlayMenuBtn.style.display = 'flex';
+         flusher.states.flushState ? backgroundBtn.style.display = 'none' : backgroundBtn.style.display = 'flex';
 
          toggleButton(flushToggle, flusher.states.flushState);
 
@@ -227,7 +226,8 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          togglePointerEvents(flusher);
 
          (flusher.states.flushState || !flusher.states.chatEnabled) ? spamBtnContainer.style.display = 'none' : spamBtnContainer.style.display = 'flex';
-         (flusher.states.flushState || !flusher.states.chatEnabled) ? layoutMenuBtn.style.display = 'none' : layoutMenuBtn.style.display = 'flex';
+         (flusher.states.flushState || !flusher.states.chatEnabled) ? overlayMenuBtn.style.display = 'none' : overlayMenuBtn.style.display = 'flex';
+         (flusher.states.flushState || !flusher.states.chatEnabled) ? backgroundBtn.style.display = 'none' : backgroundBtn.style.display = 'flex';
          (!flusher.states.chatEnabled) ? flusherToggleContainer.style.display = 'none' : flusherToggleContainer.style.display = 'flex';
          (!flusher.states.chatEnabled) ? fontBtn.style.display = 'none' : fontBtn.style.display = 'flex';
 
@@ -309,15 +309,15 @@ export function createMenu(flusher, nativeMenu, menuItem) {
    function toTitleCase(str) {
       if (!str) return 'undefined';
       if (str === 'OFF' || str === 'ON') return str;
-    
+
       const words = str.split(' ');
-    
+
       if (words.length > 0 && words[0].toUpperCase() === 'BOTTOM') {
-        words[0] = 'BOT';
+         words[0] = 'BOT';
       }
-    
+
       return words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-    }
+   }
 
    function setExtensionStorageItem(key, value) {
       const data = { [key]: value };
