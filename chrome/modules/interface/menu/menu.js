@@ -2,22 +2,22 @@ import { menu } from './element.js';
 import { dragElement } from '../../utils/drag.js';
 
 const originalPath = `
-<svg class="flusher-toggle" style="width: auto; height: 100%; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="17px" viewBox="0 0 28 18">
-<g>
-  <path opacity="0.4" fill-rule="evenodd" d="m11.52999,4.0252a8.96,8.96 0 0 0 -1.516,5a8.96,8.96 0 0 0 1.515,5l-6.515,0a5,5 0 1 1 0,-10l6.515,0l0.001,0z" id="svg_2"></path>
-  <rect x="10.01399" y="0.0252" width="18" height="18" rx="9" id="svg_3"></rect>
-</g>
-<path d="m17.92725,13.1244c-0.607,0.281 -1.291,-0.124 -1.367,-0.806c-0.108,-0.972 -0.163,-1.961 -0.163,-2.964s0.055,-1.992 0.163,-2.963c0.076,-0.682 0.76,-1.087 1.367,-0.806a22.47,22.47 0 0 1 2.423,1.31c0.82,0.51 1.6,1.067 2.338,1.665c0.502,0.407 0.502,1.182 0,1.588a23.04,23.04 0 0 1 -2.338,1.665a22.51,22.51 0 0 1 -2.422,1.31l-0.001,0.001z" fill="#061726" id="svg_4"></path>
-</svg>
+   <svg class="flusher-toggle" style="width: auto; height: 100%; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink" width="28px" height="17px" viewBox="0 0 28 18">
+      <g>
+         <path opacity="0.4" fill-rule="evenodd" d="m11.52999,4.0252a8.96,8.96 0 0 0 -1.516,5a8.96,8.96 0 0 0 1.515,5l-6.515,0a5,5 0 1 1 0,-10l6.515,0l0.001,0z" id="svg_2"></path>
+         <rect x="10.01399" y="0.0252" width="18" height="18" rx="9" id="svg_3"></rect>
+      </g>
+      <path d="m17.92725,13.1244c-0.607,0.281 -1.291,-0.124 -1.367,-0.806c-0.108,-0.972 -0.163,-1.961 -0.163,-2.964s0.055,-1.992 0.163,-2.963c0.076,-0.682 0.76,-1.087 1.367,-0.806a22.47,22.47 0 0 1 2.423,1.31c0.82,0.51 1.6,1.067 2.338,1.665c0.502,0.407 0.502,1.182 0,1.588a23.04,23.04 0 0 1 -2.338,1.665a22.51,22.51 0 0 1 -2.422,1.31l-0.001,0.001z" fill="#061726" id="svg_4"></path>
+   </svg>
 `;
 
 const newPath = `
-<svg class="flusher-toggle" style="width: auto; height: 100%; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="17px" viewBox="0 0 28 18">
-<g>
-  <path opacity="0.4" d="m16.46183,14.03325l6.516,0a5,5 0 1 0 0,-10l-6.515,0a8.96,8.96 0 0 1 1.515,5a8.96,8.96 0 0 1 -1.515,5l-0.001,0z" id="svg_1"></path>
-  <path opacity="0.7" fill-rule="evenodd" d="m8.97783,0.03325a9,9 0 1 0 0,18a9,9 0 1 0 0,-18zm-3.61,5.412c-0.14,0.21 -0.14,0.503 -0.14,1.088l0,5c0,0.585 0,0.878 0.14,1.088c0.061,0.091 0.139,0.169 0.23,0.23c0.21,0.14 0.503,0.14 1.088,0.14s0.878,0 1.088,-0.14c0.091,-0.061 0.169,-0.139 0.23,-0.23c0.141,-0.21 0.141,-0.503 0.141,-1.088l0,-5c0,-0.585 0,-0.878 -0.141,-1.088c-0.061,-0.091 -0.139,-0.169 -0.23,-0.23c-0.21,-0.14 -0.503,-0.14 -1.088,-0.14s-0.878,0 -1.088,0.14c-0.091,0.061 -0.169,0.139 -0.23,0.23zm4.583,0c-0.141,0.21 -0.141,0.503 -0.141,1.088l0,5c0,0.585 0,0.878 0.141,1.088c0.061,0.091 0.139,0.169 0.23,0.23c0.21,0.14 0.503,0.14 1.088,0.14s0.878,0 1.088,-0.14c0.091,-0.061 0.169,-0.139 0.23,-0.23c0.14,-0.21 0.14,-0.503 0.14,-1.088l0,-5c0,-0.585 0,-0.878 -0.14,-1.088c-0.061,-0.091 -0.139,-0.169 -0.23,-0.23c-0.21,-0.14 -0.503,-0.14 -1.088,-0.14s-0.878,0 -1.088,0.14c-0.091,0.061 -0.169,0.139 -0.23,0.23z" id="svg_2"></path>
-</g>
-</svg>
+   <svg class="flusher-toggle" style="width: auto; height: 100%; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink" width="28px" height="17px" viewBox="0 0 28 18">
+      <g>
+         <path opacity="0.4" d="m16.46183,14.03325l6.516,0a5,5 0 1 0 0,-10l-6.515,0a8.96,8.96 0 0 1 1.515,5a8.96,8.96 0 0 1 -1.515,5l-0.001,0z" id="svg_1"></path>
+         <path opacity="0.7" fill-rule="evenodd" d="m8.97783,0.03325a9,9 0 1 0 0,18a9,9 0 1 0 0,-18zm-3.61,5.412c-0.14,0.21 -0.14,0.503 -0.14,1.088l0,5c0,0.585 0,0.878 0.14,1.088c0.061,0.091 0.139,0.169 0.23,0.23c0.21,0.14 0.503,0.14 1.088,0.14s0.878,0 1.088,-0.14c0.091,-0.061 0.169,-0.139 0.23,-0.23c0.141,-0.21 0.141,-0.503 0.141,-1.088l0,-5c0,-0.585 0,-0.878 -0.141,-1.088c-0.061,-0.091 -0.139,-0.169 -0.23,-0.23c-0.21,-0.14 -0.503,-0.14 -1.088,-0.14s-0.878,0 -1.088,0.14c-0.091,0.061 -0.169,0.139 -0.23,0.23zm4.583,0c-0.141,0.21 -0.141,0.503 -0.141,1.088l0,5c0,0.585 0,0.878 0.141,1.088c0.061,0.091 0.139,0.169 0.23,0.23c0.21,0.14 0.503,0.14 1.088,0.14s0.878,0 1.088,-0.14c0.091,-0.061 0.169,-0.139 0.23,-0.23c0.14,-0.21 0.14,-0.503 0.14,-1.088l0,-5c0,-0.585 0,-0.878 -0.14,-1.088c-0.061,-0.091 -0.139,-0.169 -0.23,-0.23c-0.21,-0.14 -0.503,-0.14 -1.088,-0.14s-0.878,0 -1.088,0.14c-0.091,0.061 -0.169,0.139 -0.23,0.23z" id="svg_2"></path>
+      </g>
+   </svg>
 `;
 
 const originalPathFragment = new DOMParser().parseFromString(originalPath, 'text/html').body.firstChild;
@@ -126,7 +126,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
 
       (flusher.states.flushState || !flusher.states.chatEnabled) ? overlayMenuBtn.style.display = 'none' : overlayMenuBtn.style.display = 'flex';
       (flusher.states.flushState || !flusher.states.chatEnabled) ? backgroundBtn.style.display = 'none' : backgroundBtn.style.display = 'flex';
-      
+
       const spamBtnContainer = parent.querySelector('.flusher-spam');
       const spamBtn = spamBtnContainer.querySelector('.flusher-toggle');
       spamBtn.addEventListener('mousedown', function (event) {
@@ -151,7 +151,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          if (flusher.states.flushState) flusher.clear();
       });
 
-      (!flusher.states.chatEnabled) ? fontBtn.style.display = 'none' : fontBtn.style.display = 'flex';
+      /* (!flusher.states.chatEnabled) ? fontBtn.style.display = 'none' : fontBtn.style.display = 'flex'; */
 
       const avatarToggleContainer = parent.querySelector('.flusher-avatar');
       const avatarToggle = avatarToggleContainer.querySelector('.flusher-toggle');

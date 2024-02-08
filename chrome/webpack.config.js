@@ -2,11 +2,11 @@ const path = require('path');
 
 module.exports = {
    entry: './modules/content.js',
-   mode: 'development',
+   mode: 'production',
    optimization: {
       minimize: false
    },
-   devtool: 'source-map',
+   /* devtool: 'source-map', */
    output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'rumble-chat-flusher.js'

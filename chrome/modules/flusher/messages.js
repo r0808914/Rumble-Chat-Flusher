@@ -1,4 +1,4 @@
-import { processMessageQueue, processElementQueue } from "../queue/queue.js";
+import { processElementQueue } from "../queue/queue.js";
 import { togglePointerEvents } from '../interface/menu/menu.js'
 
 export class FlusherMessages {
@@ -7,97 +7,6 @@ export class FlusherMessages {
       this.socket = null;
       this.nativeChatObserver = null;
       this.channels = new Set();
-   }
-
-   subscribeChannel(flusher) {
-      const id = flusher.props.chatroomId;
-      if (!id) return;
-      if (this.channels.has(id)) {
-         console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Channel ${id} is already subscribed.`);
-         return;
-      }
-
-      const subscriptionMessage = { event: 'pusher:subscribe', data: { auth: '', channel: `chatrooms.${id}.v2` } };
-
-      if (!this.socket) {
-         this.setupWebSocket(flusher, subscriptionMessage, id);
-         return;
-      }
-
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Subscribe Channel: ' + id);
-      this.socket.send(JSON.stringify(subscriptionMessage));
-      this.channels.add(id);
-
-      if (flusher.props.external) this.getHistory(flusher);
-   }
-
-   async getHistory(flusher) {
-      const apiUrl = `https://rumble.com/api/v2/channels/${flusher.props.hostId}/messages`;
-
-      try {
-         const response = await fetch(apiUrl);
-
-         if (!response.ok) {
-            throw new Error(`Failed to fetch messages. Status: ${response.status}`);
-         }
-
-         const data = await response.json();
-
-         if (data && data.data && data.data.messages) {
-            console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m History has ${data.data.messages.length} messages`);
-            data.data.messages.forEach((message) => {
-               flusher.props.messageQueue.push(message);
-            });
-            processMessageQueue(flusher);
-         } else {
-            console.log('No messages found in the response.');
-         }
-      } catch (error) {
-         console.error('Error fetching messages:', error.message);
-      }
-   }
-
-   setupWebSocket(flusher) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Setup WebSocket');
-
-      if (this.socket) return;
-
-      const webSocketUrl = 'wss://ws-us2.pusher.com/app/eb1d5f283081a78b932c?protocol=7&client=js&version=7.6.0&flash=false';
-
-      this.socket = new WebSocket(webSocketUrl);
-
-      this.socket.onmessage = (event) => {
-         const data = JSON.parse(event.data);
-         document.body.contains(flusher.video) ? this.onMessage(data, flusher) : this.disposeChannel();
-      };
-
-      this.socket.addEventListener('open', (event) => {
-         console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m WebSocket connection opened ${flusher.props.channelName}:`, event);
-         this.subscribeChannel(flusher);
-      });
-
-      this.socket.addEventListener('close', (event) => {
-         console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m WebSocket connection closed ${flusher.props.channelName}:`, event);
-         this.channels.clear();
-      });
-
-      this.socket.addEventListener('error', (event) => {
-         console.error('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m WebSocket error:', event);
-      });
-   }
-
-   onMessage(data, flusher) {
-      if (!flusher.states.chatEnabled || data === null || flusher.props.loading) return;
-      flusher.props.messageQueue.push(data);
-      processMessageQueue(flusher);
-   }
-
-   disposeChannel() {
-      if (this.socket) {
-         this.socket.close();
-         this.socket = null;
-         return;
-      }
    }
 
    async interceptNative(flusher) {
@@ -202,7 +111,6 @@ export class FlusherMessages {
                }
             };
 
-
             const observer = new MutationObserver(mutationCallback);
             observer.observe(parent, config);
          });
@@ -211,41 +119,12 @@ export class FlusherMessages {
 
    async bindRequests(flusher) {
       console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Bind Requests');
-
       if (!flusher) return;
-
       if (!flusher.props.external && !this.nativeChatObserver) this.interceptNative(flusher);
-
-      /* setTimeout(async () => {
-         if (!flusher) return;
-
-         if (!flusher.props.chatroomId && !flusher.props.isVod) {
-            try {
-               const response = await fetch(`https://rumble.com/api/v1/channels/${flusher.props.channelName}`);
-               const data = await response.json();
-
-               flusher.props.chatroomId = data && data.chatroom && data.chatroom.id;
-               console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m chatroomId: ${flusher.props.chatroomId} ${flusher.props.channelName}`);
-
-               flusher.props.hostId = data.id;
-
-               if (flusher.props.external) {
-                  console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Badges`, data.subscriber_badges);
-                  flusher.props.badgeCache.push(...data.subscriber_badges);
-               }
-            } catch (error) {
-               console.error('Error fetching data:', error);
-            }
-         }
-
-         if (!this.socket && !flusher.props.isVod) this.subscribeChannel(flusher);
-
-      }, flusher.props.external ? 0 : 5000); */
    }
 
    unbindRequests(flusher) {
       console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Unbind Requests');
-      this.disposeChannel(flusher);
       if (!flusher?.props?.external) {
          console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Dispose Native Chat');
          if (this.nativeChatObserver) this.nativeChatObserver.disconnect();
