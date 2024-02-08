@@ -38,9 +38,7 @@ export function appendVertical(message, flusher) {
 		const oldest = flusher.container.lastChild;
 		if (!flusher.states.spamState) {
 			const entryId = oldest?.getAttribute('data-message-id');
-			if (entryId) {
-				flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
-			}
+			if (entryId) flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
 		}
 
 		oldest.remove();

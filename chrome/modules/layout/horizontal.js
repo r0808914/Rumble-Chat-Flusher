@@ -107,7 +107,7 @@ function startAnimation(messageData, flusher) {
 
 	function checkQueue(messageData, flusher) {
 		const index = messageData.row;
-		if(!flusher?.props?.rowQueue) return;
+		if (!flusher?.props?.rowQueue) return;
 		const queueItem = flusher.props.rowQueue[index].shift();
 		if (queueItem) {
 			checkRow(queueItem, index, flusher);
@@ -119,7 +119,7 @@ function startAnimation(messageData, flusher) {
 
 	function checkRow(messageData, rowIndex, flusher) {
 		/* To be Fixed */
-		
+
 		/* if ((rowIndex + 1) > flusher.props.lastRow) {
 			for (let i = 0; i < rowIndex; i++) {
 				if (flusher.props.lastPositionPerRow[i] === undefined || flusher.props.lastPositionPerRow[i].run === true) {
@@ -156,11 +156,8 @@ function prepareAnimation(data, flusher) {
 	data.container.addEventListener("animationend", function () {
 		try {
 			const oldest = flusher.container.firstChild;
-			if (!flusher.states.spamState) {
-				const entryId = oldest?.getAttribute('data-chat-entry');
-				if(entryId)
-				flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
-			}
+			const entryId = oldest?.getAttribute('data-message-id');
+			if (entryId) flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
 			oldest.remove();
 		} catch { }
 	});
