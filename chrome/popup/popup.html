@@ -3,17 +3,9 @@
 
 <head>
   <title>Popup</title>
-  <script src="popup.js">window.addEventListener('DOMContentLoaded', (event) => {
-    chrome.tabs.create({ url: 'https://rumble.com/' });
-  
-    chrome.extension.getViews({ type: "popup" }).forEach(function (win) {
-      win.close();
-    });
-  });</script>
+  <script src="popup.js"></script>
 </head>
 
-<body>
-  <!-- empty -->
-</body>
+<body></body>
 
 </html>

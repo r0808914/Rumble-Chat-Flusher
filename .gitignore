@@ -6,7 +6,5 @@ chrome/modules/utils/test/*
 
 firefox/web-ext-artifacts/*
 
-chrome/lib/*
 chrome/icons/*
 icon.png
-README.md

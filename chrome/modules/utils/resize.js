@@ -132,14 +132,15 @@ export function checkResize(flusher) {
 		emojiSpan.textContent = String.fromCodePoint(0x1F389) + ' ';
 
 		const introSpan = document.createElement("span");
-		introSpan.textContent = `thanks for testing (version 0.8.3)`;
+		introSpan.textContent = `thanks for testing`;
 		const introMessageSpan = document.createElement("span");
 
 		introMessageSpan.append(emojiSpan, introSpan);
 
 		introContent.appendChild(introMessageSpan);
 		introContent.style.setProperty('--row', 0);
-		introContent.classList.add('flusher-message');
+		introContent.classList.add('flusher-rumble');
+		introContent.classList.add('chat-history--row');
 
 		const parent = flusher.props.external ? flusher.container : document.body;
 		parent.append(introContent);
