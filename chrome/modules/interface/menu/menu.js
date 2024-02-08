@@ -35,16 +35,6 @@ export function createMenu(flusher, nativeMenu, menuItem) {
       const shadowRoot = shadowBox.attachShadow({ mode: 'open' });
       const b = typeof browser !== 'undefined' ? browser : chrome;
 
-      /* const linkElement = document.createElement('link');
-      linkElement.rel = 'stylesheet';
-      linkElement.href = b.runtime.getURL('lib/rumble/app.b67a4f06.css');
-      shadowRoot.appendChild(linkElement); */
-
-      const menuLink = document.createElement('link');
-      menuLink.rel = 'stylesheet';
-      menuLink.href = b.runtime.getURL('lib/flusher/menu.css');
-      shadowRoot.appendChild(menuLink);
-
       const clonedMenu = menu.cloneNode(true);
 
       shadowRoot.append(...clonedMenu.children);
@@ -179,7 +169,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          setExtensionStorageItem('flusher-reply', flusher.states.reply);
       });
 
-      (flusher.props.external || flusher.props.isVod) ? replyToggleContainer.style.display = 'none' : replyToggleContainer.style.display = 'flex';
+      /* (flusher.props.external || flusher.props.isVod) ? replyToggleContainer.style.display = 'none' : replyToggleContainer.style.display = 'flex'; */
       toggleButton(replyToggle, flusher.states.reply);
 
       const timeToggleContainer = messageMenu.querySelector('.flusher-time');
@@ -209,12 +199,6 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          toggleButton(flushToggle, flusher.states.flushState);
 
          (flusher.states.flushState || !flusher.states.chatEnabled) ? spamBtnContainer.style.display = 'none' : spamBtnContainer.style.display = 'flex';
-
-         if (flusher.states.flushState) {
-
-         } else {
-
-         }
 
          if (flusher.states.chatEnabled && !flusher.states.flushState) dragElement(flusher);
 
@@ -271,7 +255,6 @@ export function createMenu(flusher, nativeMenu, menuItem) {
       flusher.menuItem = menuItem;
       nativeMenu.appendChild(flusher.menuItem);
 
-
       const handleStyleChanges = () => {
          const children = nativeMenu.parentElement.querySelectorAll('ul');
 
@@ -326,10 +309,15 @@ export function createMenu(flusher, nativeMenu, menuItem) {
    function toTitleCase(str) {
       if (!str) return 'undefined';
       if (str === 'OFF' || str === 'ON') return str;
-      return str.toLowerCase().replace(/\b\w/g, function (char) {
-         return char.toUpperCase();
-      });
-   }
+    
+      const words = str.split(' ');
+    
+      if (words.length > 0 && words[0].toUpperCase() === 'BOTTOM') {
+        words[0] = 'BOT';
+      }
+    
+      return words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    }
 
    function setExtensionStorageItem(key, value) {
       const data = { [key]: value };
@@ -386,7 +374,9 @@ export function clickOutsideHandler(event, flusher) {
    }
 }
 
-function togglePointerEvents(flusher) {
+export function togglePointerEvents(flusher) {
+   console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m togglePointerEvents');
+
    if (flusher.states.flushState || !flusher.states.chatEnabled) {
       flusher.container.classList.remove('flusher-grab');
       flusher.container.classList.add('flusher-no-grab');

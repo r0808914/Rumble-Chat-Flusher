@@ -47,7 +47,9 @@ function startAnimation(messageData, flusher) {
 
 		requestAnimationFrame(() => {
 			flusher.container.appendChild(message);
+
 			messageWidth = message.offsetWidth;
+
 			message.style.marginRight = `-${messageWidth}px`;
 
 			const rect1 = message.getBoundingClientRect();

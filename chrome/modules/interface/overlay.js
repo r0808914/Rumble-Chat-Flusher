@@ -1,4 +1,3 @@
-import { createMenu } from './menu/menu.js';
 import { checkResize } from '../utils/resize.js';
 import { getFont } from '../utils/utils.js';
 
@@ -49,9 +48,8 @@ export async function createChat(flusher) {
    flusher.states.backgroundState = await getExtensionStorageItem('flusher-background', flusher.states.backgroundState);
    flusher.states.timeState = await getExtensionStorageItem('flusher-time', flusher.states.timeState);
 
-   /* flusher.toggle = createMenu(flusher); */
-
-   flusher.props.external ? flusher.video.parentNode.append(chatFlusher) : flusher.video.append(chatFlusher);
+   const video = flusher.video.querySelector('video');
+   video.parentNode.insertBefore(chatFlusher, video);
    flusher.props.external ? shadowRoot.appendChild(flusherDiv) : chatFlusher.append(flusherDiv);
    checkResize(flusher);
 

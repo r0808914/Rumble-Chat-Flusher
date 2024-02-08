@@ -85,7 +85,8 @@ export function checkResize(flusher) {
 						document.addEventListener('click', handleClick);
 
 						function handleClick(event) {
-							var targetSvg = event.target.closest('svg')?.tagName === 'svg' && event.target.querySelector('path')?.getAttribute('d').includes('M20');
+							const svg = event.target.closest('svg');
+							var targetSvg = svg && svg.querySelector('path')?.getAttribute('d').includes('M20');
 
 							if (targetSvg) {
 								document.removeEventListener('click', handleClick);
@@ -108,7 +109,7 @@ export function checkResize(flusher) {
 											createMenu(flusher, closestUl, clonedLi);
 										}
 									}
-								}, 250);
+								}, 150); /* change to observer */
 							}
 						}
 

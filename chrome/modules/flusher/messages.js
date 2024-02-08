@@ -1,4 +1,5 @@
 import { processMessageQueue, processElementQueue } from "../queue/queue.js";
+import { togglePointerEvents } from '../interface/menu/menu.js'
 
 export class FlusherMessages {
    constructor() {
@@ -103,6 +104,8 @@ export class FlusherMessages {
       console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Intercept Native Chat');
       const nativeChat = await waitForChat(flusher.props.isVod ? document.querySelector('#chat-history-list') : document.querySelector('#chat-history-list'));
 
+      togglePointerEvents(flusher);
+
       if (!flusher.states.flushState) setTimeout(() => {
          console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Parse existing');
          nativeChat.childNodes.forEach(addedNode => addMessage(addedNode));
@@ -128,7 +131,8 @@ export class FlusherMessages {
          const userId = clonedNode.getAttribute('data-message-user-id');
 
          const classLength = clonedNode.classList.length;
-         if (flusher.states.flushState && classLength > 1) return;
+         /* if (flusher.states.flushState && classLength > 1) return; */
+         if (classLength > 1) clonedNode.classList.add('flusher-background');
          if (userId) {
             if ((!flusher.states.spamState || flusher.states.flushState) && !flusher.props.isVod) {
                let uniqueString = '';
@@ -137,11 +141,11 @@ export class FlusherMessages {
                const divTextContent = clonedNode.querySelector('.chat-history--message')?.textContent;
                uniqueString += divTextContent + '-';
 
-               /* const emoteElements = clonedNode.querySelectorAll('[data-emote-name]');
+               const emoteElements = clonedNode.querySelectorAll('.chat-history--emote');
                emoteElements.forEach((emoteElement) => {
-                  const emoteValue = emoteElement.getAttribute('data-emote-name');
+                  const emoteValue = emoteElement.getAttribute('title');
                   uniqueString += emoteValue;
-               }); */
+               });
 
                const exist = flusher.props.displayedMessages.find(obj => {
                   return obj.key === uniqueString
@@ -160,20 +164,7 @@ export class FlusherMessages {
 
                flusher.props.displayedMessages.push({ id: id, key: uniqueString });
             }
-
-            /* if (!flusher.states.reply || flusher.states.flushState) {
-               const chatEntry = clonedNode.querySelector('.chat-entry');
-               if (chatEntry && chatEntry.childElementCount > 1) {
-                  chatEntry.firstElementChild.style.display = 'none';
-               }
-            }
-
-            if (flusher.props.isVod && (flusher.states.flushState || !flusher.states.timeState)) {
-               clonedNode.querySelector('.chat-entry div').firstElementChild.style.display = 'none';
-            } */
          }
-
-         /* clonedNode.classList.remove("mt-0.5"); */
 
          flusher.props.elementQueue.push(clonedNode);
          processElementQueue(flusher);
@@ -183,10 +174,10 @@ export class FlusherMessages {
          console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Looking for Native Chat');
          if (!parent) parent = document.body;
 
-         const chatEntry = parent.querySelector('[data-chat-entry]');
+         const chatEntry = parent.querySelector('.chat-history--row');
          if (chatEntry) {
             console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found');
-            return chatEntry.parentElement;
+            return chatEntry.parentNode;
          }
 
          return new Promise(resolve => {

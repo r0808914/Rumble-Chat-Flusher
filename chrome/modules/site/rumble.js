@@ -29,7 +29,6 @@ class Rumble {
             if (video && live) {
               console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble stop video observer');
               const channelName = document.querySelector('.media-heading-name').textContent.trim();
-              console.log(video.querySelectorAll('ul'));  
               observer.disconnect();
               stopObserver = true;
               video = document.getElementById("videoPlayer");

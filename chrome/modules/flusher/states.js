@@ -6,7 +6,7 @@ export class FlusherStates {
     this.backgroundState = 2;
     this.positionState = 4;
     this.sizeState = 1;
-    this.fontState = 1;
+    this.fontState = 0;
     this.reply = false;
     this.flushState = false;
     this.chatEnabled = true;
