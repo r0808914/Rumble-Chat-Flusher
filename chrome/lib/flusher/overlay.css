@@ -130,8 +130,8 @@
 }
 
 .flusher-messages[layout="vertical"][enabled="true"]:hover {
-  outline: 1px solid var(--flusher-green);
-  resize: both;
+  outline: 2px solid var(--flusher-green);
+  border-radius: 1px;
 }
 
 .flusher-messages[layout="vertical"][position="BOTTOMLEFT"] {
@@ -256,23 +256,27 @@
   font-size: large;
 }
 
-.flusher-messages[font="NORMAL"][layout="vertical"] .chat-history--row div[class="chat-history--username"] {
+.flusher-messages .chat-history--username {
+  max-width: none;
+}
+
+.flusher-messages[font="NORMAL"][layout="vertical"] .chat-history--username {
   text-shadow: -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black, 1px 1px 2px black;
 }
 
-.flusher-messages[font="NORMAL"][layout="vertical"] .chat-history--row div[class="chat-history--message"] {
+.flusher-messages[font="NORMAL"][layout="vertical"] .chat-history--message {
   text-shadow: -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black, 1px 1px 2px black;
 }
 
-.flusher-messages[font="NORMAL"][layout="vertical"] .chat-history--row {
+.flusher-messages[font="NORMAL"][layout="vertical"] {
   padding: .1rem .4rem !important;
 }
 
-.flusher-messages[font="SMALL"][layout="vertical"] .chat-history--row div[class="chat-history--username"] {
+.flusher-messages[font="SMALL"][layout="vertical"] .chat-history--username {
   text-shadow: -1px -1px 1px black, 1px -1px 1px black, -1px 1px 1px black, 1px 1px 1px black;
 }
 
-.flusher-messages[font="SMALL"][layout="vertical"] .chat-history--row div[class="chat-history--message"] {
+.flusher-messages[font="SMALL"][layout="vertical"] .chat-history--message {
   text-shadow: -1px -1px 1px black, 1px -1px 1px black, -1px 1px 1px black, 1px 1px 1px black;
 }
 
@@ -280,11 +284,11 @@
   padding: .1rem .4rem !important;
 }
 
-.flusher-messages[font="LARGE"][layout="vertical"] .chat-history--row div[class="chat-history--username"] {
+.flusher-messages[font="LARGE"][layout="vertical"] .chat-history--username {
   text-shadow: -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black, 1px 1px 2px black;
 }
 
-.flusher-messages[font="LARGE"][layout="vertical"] .chat-history--row div[class="chat-history--message"] {
+.flusher-messages[font="LARGE"][layout="vertical"] .chat-history--message {
   text-shadow: -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black, 1px 1px 2px black;
 }
 
@@ -294,6 +298,18 @@
 
 .flusher-no-grab {
   pointer-events: none;
+}
+
+.flusher-messages.flusher-grab:hover::after {
+  background-image: url("data:image/svg+xml,%3Csvg width='64px' height='64px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' fill='%23000000'%3E%3Cg id='SVGRepo_bgCarrier' stroke-width='0'%3E%3C/g%3E%3Cg id='SVGRepo_tracerCarrier' stroke-linecap='round' stroke-linejoin='round'%3E%3C/g%3E%3Cg id='SVGRepo_iconCarrier'%3E%3Cpath fill='%23FFFFFF' d='M16 16h-16l16-16z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+  background-size: 10px;
+  width: 10px;
+  height: 10px;
+  content: " ";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  cursor: nwse-resize;
 }
 
 @keyframes slide-in {

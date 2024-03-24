@@ -182,10 +182,8 @@ function prepareAnimation(data, flusher) {
   data.container.addEventListener("animationend", function () {
     try {
       const oldest = flusher.container.firstChild;
-      if (!flusher.states.spamState) {
-        const entryId = oldest?.getAttribute('data-chat-entry');
-        if (entryId) flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
-      }
+      const entryId = oldest?.getAttribute('data-message-id');
+      if (entryId) flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
       oldest.remove();
     } catch {}
   });
@@ -228,9 +226,7 @@ function appendVertical(message, flusher) {
     const oldest = flusher.container.lastChild;
     if (!flusher.states.spamState) {
       const entryId = oldest?.getAttribute('data-message-id');
-      if (entryId) {
-        flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
-      }
+      if (entryId) flusher.props.displayedMessages = flusher.props.displayedMessages.filter(message => message.id !== entryId);
     }
     oldest.remove();
   }

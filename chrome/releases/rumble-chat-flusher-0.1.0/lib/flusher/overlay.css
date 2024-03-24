@@ -70,6 +70,9 @@
 }
 
 .flusher-messages[layout="horizontal"] .chat-history--badges-wrapper,
+.flusher-messages[layout="horizontal"] .chat-history--rant,
+.flusher-messages[layout="horizontal"] .chat-history--rant-head,
+.flusher-messages[layout="horizontal"] .chat-history--rant-text,
 .flusher-messages[layout="horizontal"] .chat-history--username {
   align-items: center;
   display: flex;

@@ -4,7 +4,7 @@ import { getFont } from '../utils/utils.js';
 export async function createChat(flusher) {
    if (flusher.video.hasAttribute('flusher')) return;
    flusher.video.setAttribute('flusher', "")
-   console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create Chat');
+   /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create Chat'); */
 
    const chatFlusher = document.createElement("div");
    chatFlusher.classList.add("flusher");

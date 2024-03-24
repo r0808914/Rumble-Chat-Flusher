@@ -3,27 +3,30 @@ import { togglePointerEvents } from '../interface/menu/menu.js'
 
 export class FlusherMessages {
    constructor() {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create MessageProvider');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create MessageProvider'); */
       this.socket = null;
       this.nativeChatObserver = null;
       this.channels = new Set();
+
+      const b = typeof browser !== "undefined" ? browser : chrome;
+      this.defaultAvatar = b.runtime.getURL("lib/flusher/icon.png");
    }
 
    async interceptNative(flusher) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Intercept Native Chat');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Intercept Native Chat'); */
       const nativeChat = await waitForChat(flusher.props.isVod ? document.querySelector('#chat-history-list') : document.querySelector('#chat-history-list'));
 
       togglePointerEvents(flusher);
 
       if (!flusher.states.flushState) setTimeout(() => {
-         console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Parse existing');
+         /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Parse existing'); */
          nativeChat.childNodes.forEach(addedNode => addMessage(addedNode));
       }, 150);
 
       this.nativeChatObserver = new MutationObserver(mutations => {
          mutations.forEach(mutation => {
             if (mutation.type === 'childList') {
-               mutation.addedNodes.forEach(addedNode => setTimeout(() => addMessage(addedNode), 150))
+               mutation.addedNodes.forEach(addedNode => setTimeout(() => addMessage(addedNode, this.defaultAvatar), 150))
             }
          });
       });
@@ -31,7 +34,7 @@ export class FlusherMessages {
       const observerConfig = { childList: true, subtree: false };
       this.nativeChatObserver.observe(nativeChat, observerConfig);
 
-      function addMessage(node) {
+      function addMessage(node, defaultAvatar) {
          let clonedNode = node.cloneNode(true);
 
          if (!clonedNode || clonedNode.nodeName !== "LI") return;
@@ -75,9 +78,20 @@ export class FlusherMessages {
             }
          }
 
-         if (!flusher.states.avatar) {
-            const avatar = clonedNode.querySelector('.chat-history--user-avatar');
-            if (avatar) avatar.style.display = 'none';
+         const avatar = clonedNode.querySelector('.chat-history--user-avatar');
+
+         if (avatar) {
+            if (!flusher.states.avatar) avatar.style.display = 'none';
+
+            if (avatar.getAttribute('src') === undefined) {
+               this.src = defaultAvatar;
+            }
+            avatar.onerror = function () {
+               this.style.display = "none";
+               this.onerror = null;
+               this.src = defaultAvatar;
+               this.style.display = "block";
+            };
          }
 
          flusher.props.elementQueue.push(clonedNode);
@@ -85,12 +99,12 @@ export class FlusherMessages {
       }
 
       function waitForChat(parent) {
-         console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Looking for Native Chat');
+         /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Looking for Native Chat'); */
          if (!parent) parent = document.body;
 
          const chatEntry = parent.querySelector('.chat-history--row');
          if (chatEntry) {
-            console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found');
+            /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found'); */
             return chatEntry.parentNode;
          }
 
@@ -104,7 +118,7 @@ export class FlusherMessages {
                         if (node.nodeType === 1 && node.classList.contains('chat-history--row')) {
                            observer.disconnect();
                            resolve(node.parentNode);
-                           console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found');
+                           /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found'); */
                         }
                      });
                   }
@@ -118,15 +132,15 @@ export class FlusherMessages {
    }
 
    async bindRequests(flusher) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Bind Requests');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Bind Requests'); */
       if (!flusher) return;
       if (!flusher.props.external && !this.nativeChatObserver) this.interceptNative(flusher);
    }
 
    unbindRequests(flusher) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Unbind Requests');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Unbind Requests'); */
       if (!flusher?.props?.external) {
-         console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Dispose Native Chat');
+         /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Dispose Native Chat'); */
          if (this.nativeChatObserver) this.nativeChatObserver.disconnect();
          this.nativeChatObserver = null;
       }

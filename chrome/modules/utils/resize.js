@@ -3,7 +3,7 @@ import { processMessageQueue } from "../queue/queue.js"
 import RUMBLE from '../site/rumble.js';
 
 export function checkResize(flusher) {
-	console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Check Resize');
+	/* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Check Resize'); */
 	const target = flusher.props.external ? flusher.video : flusher.video.querySelector('video');
 
 	flusher.resizeTimer = null;
@@ -25,7 +25,7 @@ export function checkResize(flusher) {
 
 					if ((width === null || width === 0) && (!height || height === 0)) {
 						if (flusher !== null) {
-							console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Remove Chat');
+							/* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Remove Chat'); */
 							const init = !flusher.props.external;
 							flusher.resizeObserver.disconnect();
 							flusher.resizeObserver = null;
@@ -37,7 +37,7 @@ export function checkResize(flusher) {
 						return;
 					}
 
-					console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Width ${width} height ${height}`);
+					/* console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Width ${width} height ${height}`); */
 
 					const oldWidth = flusher.props.parentWidth;
 					flusher.props.parentWidth = Math.trunc(width) * 2;

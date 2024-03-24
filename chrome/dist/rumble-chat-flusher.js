@@ -406,7 +406,7 @@ const menuHtml = `<div class="flusher-menu">
       </span>Font <span style="right: 5px;position: absolute;width: auto;height: auto;margin: 0px;padding: 0px 0px 0px 14px;background: none;opacity: 1;font: 600 12px sans-serif;box-sizing: content-box;border: none;visibility: visible;text-size-adjust: auto;text-decoration: none;color: inherit;float: right;"></span>
     </div>
   </li>
-  <li class="flusher-store" style="display: none; width: auto; height: auto; margin: 0px; padding: 0px; opacity: 0.8; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: rgb(255, 255, 255); position: relative; list-style: none; text-align: left; white-space: nowrap; min-width: 102px; max-width: 140px; transition: opacity 100ms ease 0s;">
+  <li class="flusher-store" style="width: auto; height: auto; margin: 0px; padding: 0px; opacity: 0.8; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: rgb(255, 255, 255); position: relative; list-style: none; text-align: left; white-space: nowrap; min-width: 102px; max-width: 140px; transition: opacity 100ms ease 0s;">
     <div style="width: auto; height: auto; margin: 0px; padding: 6px 14px 6px 7px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: inherit; cursor: pointer;">
       <span aria-hidden="true" style="width: auto; height: auto; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; color: inherit; position: absolute; left: 3px; display: none;">
         <svg style="stroke: currentcolor; width: auto; height: auto; margin: 0px; padding: 0px; background: none; opacity: 1; font: 12px sans-serif; box-sizing: content-box; border: none; visibility: visible; text-size-adjust: auto; text-decoration: none; fill: currentcolor;" class="RumbleElm" xmlns="http://www.w3.org/2000/svg" xmlns: xlink="http://www.w3.org/1999/xlink" width="10px" height="10px" viewBox="0 0 10 10">
@@ -639,7 +639,7 @@ function createMenu(flusher, nativeMenu, menuItem) {
     storeBtn.addEventListener('mousedown', function (event) {
       hideMenu(flusher);
       const userAgent = navigator.userAgent.toLowerCase();
-      userAgent.includes("firefox") ? window.open('https://addons.mozilla.org/en-US/firefox/addon/rumblechatflusher/', '_blank') : window.open('https://chromewebstore.google.com/detail/Rumble-Chat-Flusher/cefplanllnmdnnhncpopljmcjnlafdke', '_blank');
+      userAgent.includes("firefox") ? window.open('https://addons.mozilla.org/en-US/firefox/addon/rumblechatflusher/', '_blank') : window.open('https://chromewebstore.google.com/detail/pofaoopjhbljffecdafcccbcjhfebdlf', '_blank');
     });
     const positionBtn = overlayMenu.querySelector('.flusher-position');
     const divInsidePosition = positionBtn.querySelector('span:empty');
@@ -845,7 +845,7 @@ function createMenu(flusher, nativeMenu, menuItem) {
       [key]: value
     };
     chrome.storage.local.set(data, () => {
-      console.log(`Value for key ${key} has been set to ${value} in extension storage.`);
+      /* console.log(`Value for key ${key} has been set to ${value} in extension storage.`); */
     });
   }
 }
@@ -888,7 +888,8 @@ function clickOutsideHandler(event, flusher) {
   }
 }
 function togglePointerEvents(flusher) {
-  console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m togglePointerEvents');
+  /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m togglePointerEvents'); */
+
   if (flusher.states.flushState || !flusher.states.chatEnabled) {
     flusher.container.classList.remove('flusher-grab');
     flusher.container.classList.add('flusher-no-grab');
@@ -904,23 +905,25 @@ function togglePointerEvents(flusher) {
 
 class FlusherMessages {
   constructor() {
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create MessageProvider');
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create MessageProvider'); */
     this.socket = null;
     this.nativeChatObserver = null;
     this.channels = new Set();
+    const b = typeof browser !== "undefined" ? browser : chrome;
+    this.defaultAvatar = b.runtime.getURL("lib/flusher/icon.png");
   }
   async interceptNative(flusher) {
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Intercept Native Chat');
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Intercept Native Chat'); */
     const nativeChat = await waitForChat(flusher.props.isVod ? document.querySelector('#chat-history-list') : document.querySelector('#chat-history-list'));
     togglePointerEvents(flusher);
     if (!flusher.states.flushState) setTimeout(() => {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Parse existing');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Parse existing'); */
       nativeChat.childNodes.forEach(addedNode => addMessage(addedNode));
     }, 150);
     this.nativeChatObserver = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         if (mutation.type === 'childList') {
-          mutation.addedNodes.forEach(addedNode => setTimeout(() => addMessage(addedNode), 150));
+          mutation.addedNodes.forEach(addedNode => setTimeout(() => addMessage(addedNode, this.defaultAvatar), 150));
         }
       });
     });
@@ -929,7 +932,7 @@ class FlusherMessages {
       subtree: false
     };
     this.nativeChatObserver.observe(nativeChat, observerConfig);
-    function addMessage(node) {
+    function addMessage(node, defaultAvatar) {
       let clonedNode = node.cloneNode(true);
       if (!clonedNode || clonedNode.nodeName !== "LI") return;
       const id = clonedNode.getAttribute('data-message-id');
@@ -966,19 +969,28 @@ class FlusherMessages {
           });
         }
       }
-      if (!flusher.states.avatar) {
-        const avatar = clonedNode.querySelector('.chat-history--user-avatar');
-        if (avatar) avatar.style.display = 'none';
+      const avatar = clonedNode.querySelector('.chat-history--user-avatar');
+      if (avatar) {
+        if (!flusher.states.avatar) avatar.style.display = 'none';
+        if (avatar.getAttribute('src') === undefined) {
+          this.src = defaultAvatar;
+        }
+        avatar.onerror = function () {
+          this.style.display = "none";
+          this.onerror = null;
+          this.src = defaultAvatar;
+          this.style.display = "block";
+        };
       }
       flusher.props.elementQueue.push(clonedNode);
       processElementQueue(flusher);
     }
     function waitForChat(parent) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Looking for Native Chat');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Looking for Native Chat'); */
       if (!parent) parent = document.body;
       const chatEntry = parent.querySelector('.chat-history--row');
       if (chatEntry) {
-        console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found');
+        /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found'); */
         return chatEntry.parentNode;
       }
       return new Promise(resolve => {
@@ -994,7 +1006,7 @@ class FlusherMessages {
                 if (node.nodeType === 1 && node.classList.contains('chat-history--row')) {
                   observer.disconnect();
                   resolve(node.parentNode);
-                  console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found');
+                  /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Native Chat found'); */
                 }
               });
             }
@@ -1006,14 +1018,14 @@ class FlusherMessages {
     }
   }
   async bindRequests(flusher) {
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Bind Requests');
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Bind Requests'); */
     if (!flusher) return;
     if (!flusher.props.external && !this.nativeChatObserver) this.interceptNative(flusher);
   }
   unbindRequests(flusher) {
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Unbind Requests');
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Unbind Requests'); */
     if (!flusher?.props?.external) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Dispose Native Chat');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Dispose Native Chat'); */
       if (this.nativeChatObserver) this.nativeChatObserver.disconnect();
       this.nativeChatObserver = null;
     }
@@ -1021,7 +1033,7 @@ class FlusherMessages {
 }
 ;// CONCATENATED MODULE: ./modules/utils/utils.js
 function visibilityChange(flusher) {
-  console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Add visibilityChange');
+  /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Add visibilityChange'); */
   document.addEventListener('visibilitychange', function handleVisibilityChange() {
     if (!flusher || !flusher.states.flushState) return;
     if (document.hidden) {
@@ -1057,7 +1069,8 @@ class Flusher {
     visibilityChange(this);
   }
   resetConnection() {
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Reset Connection');
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Reset Connection'); */
+
     if (!this.props.flusher) return;
     clearChat(this.props.flusher);
     isVod = false;
@@ -1129,7 +1142,7 @@ class Flusher {
 
 
 function checkResize(flusher) {
-  console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Check Resize');
+  /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Check Resize'); */
   const target = flusher.props.external ? flusher.video : flusher.video.querySelector('video');
   flusher.resizeTimer = null;
   if (flusher.resizeObserver) flusher.resizeObserver.disconnect();
@@ -1145,7 +1158,7 @@ function checkResize(flusher) {
           window.currentUrl = window.location.href;
           if ((width === null || width === 0) && (!height || height === 0)) {
             if (flusher !== null) {
-              console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Remove Chat');
+              /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Remove Chat'); */
               const init = !flusher.props.external;
               flusher.resizeObserver.disconnect();
               flusher.resizeObserver = null;
@@ -1155,7 +1168,9 @@ function checkResize(flusher) {
             }
             return;
           }
-          console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Width ${width} height ${height}`);
+
+          /* console.log(`\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Width ${width} height ${height}`); */
+
           const oldWidth = flusher.props.parentWidth;
           flusher.props.parentWidth = Math.trunc(width) * 2;
           flusher.props.parentHeight = Math.trunc(height);
@@ -1269,7 +1284,8 @@ function debouncedScroll(flusher) {
 async function createChat(flusher) {
   if (flusher.video.hasAttribute('flusher')) return;
   flusher.video.setAttribute('flusher', "");
-  console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create Chat');
+  /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Create Chat'); */
+
   const chatFlusher = document.createElement("div");
   chatFlusher.classList.add("flusher");
   const flusherDiv = document.createElement("div");
@@ -1324,12 +1340,12 @@ async function createChat(flusher) {
 
 class Rumble {
   static init() {
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Initialize');
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Initialize'); */
     let stopObserver = false;
     let video;
     video = document.getElementById("videoPlayer");
     if (video) {
-      console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble video found');
+      /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble video found'); */
       if (document.querySelector('.video-header-live-info')) {
         const channelName = document.querySelector('.media-heading-name').textContent.trim();
         const flusher = new Flusher(video, "RUMBLE", channelName);
@@ -1337,7 +1353,8 @@ class Rumble {
         return;
       }
     }
-    console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble start video observer');
+
+    /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble start video observer'); */
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) {
         if (!stopObserver && mutation.addedNodes) {
@@ -1345,7 +1362,7 @@ class Rumble {
             video = document.getElementById("videoPlayer");
             const live = document.querySelector('.video-header-live-info');
             if (video && live) {
-              console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble stop video observer');
+              /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Rumble stop video observer'); */
               const channelName = document.querySelector('.media-heading-name').textContent.trim();
               observer.disconnect();
               stopObserver = true;

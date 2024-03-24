@@ -1,5 +1,5 @@
 export function visibilityChange(flusher) {
-	console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Add visibilityChange');
+	/* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m Add visibilityChange'); */
 	document.addEventListener('visibilitychange', function handleVisibilityChange() {
 		if (!flusher || !flusher.states.flushState) return;
 		if (document.hidden) {

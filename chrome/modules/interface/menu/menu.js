@@ -60,7 +60,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
          const userAgent = navigator.userAgent.toLowerCase();
          userAgent.includes("firefox") ?
             window.open('https://addons.mozilla.org/en-US/firefox/addon/rumblechatflusher/', '_blank') :
-            window.open('https://chromewebstore.google.com/detail/Rumble-Chat-Flusher/cefplanllnmdnnhncpopljmcjnlafdke', '_blank');
+            window.open('https://chromewebstore.google.com/detail/pofaoopjhbljffecdafcccbcjhfebdlf', '_blank');
       });
 
       const positionBtn = overlayMenu.querySelector('.flusher-position');
@@ -322,7 +322,7 @@ export function createMenu(flusher, nativeMenu, menuItem) {
    function setExtensionStorageItem(key, value) {
       const data = { [key]: value };
       chrome.storage.local.set(data, () => {
-         console.log(`Value for key ${key} has been set to ${value} in extension storage.`);
+         /* console.log(`Value for key ${key} has been set to ${value} in extension storage.`); */
       });
    }
 }
@@ -375,7 +375,7 @@ export function clickOutsideHandler(event, flusher) {
 }
 
 export function togglePointerEvents(flusher) {
-   console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m togglePointerEvents');
+   /* console.log('\x1b[42m\x1b[97m Rumble Chat Flusher \x1b[49m\x1b[0m togglePointerEvents'); */
 
    if (flusher.states.flushState || !flusher.states.chatEnabled) {
       flusher.container.classList.remove('flusher-grab');

@@ -5,3 +5,5 @@ chrome/dist/main*
 chrome/modules/utils/test/*
 
 firefox/web-ext-artifacts/*
+
+screenshot/*

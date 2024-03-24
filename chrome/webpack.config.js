@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
    entry: './modules/content.js',
-   mode: 'production',
+   mode: 'production', // production development
    optimization: {
       minimize: false
    },
